@@ -163,14 +163,17 @@ function groupColorize() {
 	var tracking = {};
 	$('.wc-cal-event').each(function(index, el) {
 		var c = $(el).data().calEvent;
+		var title = c.title.substring(0, c.title.indexOf(" at"));
 		if( !(c.groupId in tracking) ) {
 			tracking[c.groupId] = getRandomColorPair();
 		}
 		// check for co-classes & make them same color
-		for (id in tracking) {
-			var diff = Math.abs(c.groupId - id); // should be in [1,9] if they are co-classes
-			if ((1 <= diff) && (diff <= 9)) {
-				tracking[c.groupId] = tracking[id];
+		var classes = $('.wc-cal-event');
+		for (let i=0; i<classes.length; i++) {
+			otherC = $(classes[i]).data().calEvent;
+			otherTitle = otherC.title.substring(0, otherC.title.indexOf(" at"));
+			if (title == otherTitle) {
+			    tracking[otherC.groupId] = tracking[c.groupId];
 			}
 		}
 		colorEvent(this, tracking[c.groupId]);
